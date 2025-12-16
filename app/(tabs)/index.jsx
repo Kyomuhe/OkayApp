@@ -1,5 +1,7 @@
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
 import login from '../../assets/images/login.png';
+import { router } from 'expo-router';
+
 
 const Index = () => {
     return (
@@ -38,15 +40,17 @@ const Index = () => {
 
             </TouchableOpacity>
             <Text
-            style = {styles.separator}
+                style={styles.separator}
             >
                 OR
             </Text>
             <TouchableOpacity
-            style={styles.signupLinkArea}
+                style={styles.signupLinkArea}
+                onPress={() => router.push('/Register/signup')}
+
             >
                 <Text style={styles.signupLinkText}>
-                    Don't have an account? <Text style={styles.signupLink}>Sign Up</Text>
+                    Dont have an account? <Text style={styles.signupLink}>Sign Up</Text>
                 </Text>
 
             </TouchableOpacity>
@@ -98,22 +102,22 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     separator: {
-        marginVertical:10,
+        marginVertical: 10,
         fontSize: 16,
         color: '#888',
         fontFamily: '600',
         textAlign: 'center',
     },
-    signupLinkArea:{
+    signupLinkArea: {
         padding: 10,
         alignItems: 'center',
     },
     signupLinkText: {
-        fontSize:16,
+        fontSize: 16,
         color: '#666',
         textAlign: 'center',
     },
-    signupLink:{
+    signupLink: {
         color: '#007AFF',
         fontWeight: 'bold',
         textDecorationLine: 'underline',

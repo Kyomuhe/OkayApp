@@ -1,0 +1,98 @@
+import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { useState } from 'react'
+import signup from '../../../assets/images/signUp.png'
+import { RadioButton } from 'react-native-paper';
+import { router } from 'expo-router';
+
+
+const SignUp = () => {
+    const [accountType, setAccountType] = useState('Normal');
+
+    const handleSubmit =() => {
+        if(accountType === 'Normal'){
+            router.push('/Register/normal')
+            return;
+        }
+        if(accountType === 'Professional'){
+            router.push('/Register/prof')
+            return;
+        }
+    }
+
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Choose Type of Account</Text>
+            <Text style={styles.note}>Note: Professional accounts are for medical personnel</Text>
+
+            <Image
+                source={signup}
+                style={{
+                    width: '100%', 
+                    height: 200, 
+                    resizeMode: 'contain', 
+                    marginBottom: 20
+                }}
+            />
+
+            <RadioButton.Group 
+                onValueChange={value => setAccountType(value)} 
+                value={accountType}
+            >
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                    <RadioButton value="Normal" />
+                    <Text>Normal Account</Text>
+                </View>
+                
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <RadioButton value="Professional" />
+                    <Text>Professional Account</Text>
+                </View>
+            </RadioButton.Group>
+
+            <TouchableOpacity
+            style= {styles.button}
+            onPress={()=>{handleSubmit()}}
+            >
+                <Text style ={styles.buttonText}>Continue</Text>
+                
+            </TouchableOpacity>
+
+        </View>
+    )
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+        padding: 20,
+        justifyContent: 'center',
+    },
+    title: {
+        color: '#007AFF',
+        fontWeight: 'bold',
+        fontSize: 27,
+        marginBottom: 10,
+    },
+    note: {
+        color: 'gray',
+        fontSize: 13,
+        marginBottom: 20,
+    },
+    button:{
+        backgroundColor: '#007AFF',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        marginTop: 50,
+    },
+        buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+
+})
+
+export default SignUp;

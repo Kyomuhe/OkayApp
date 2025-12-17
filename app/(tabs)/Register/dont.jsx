@@ -5,8 +5,8 @@ const Dont = () => {
             <Text style={styles.title}>You Are Almost There</Text>
             <Text style={styles.note}>Remember, even though you are not a medical professional, you can still help.
             </Text>
-            <View style={{flexDirection:'row', justifyContent:'space-between', gap: 10}}>
-                <View style={{flex: 1}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
+                <View style={{ flex: 1 }}>
                     <Text style={styles.label}>First Name</Text>
                     <TextInput
                         style={styles.input}
@@ -15,7 +15,7 @@ const Dont = () => {
 
                     />
                 </View>
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                     <Text style={styles.label}>Last Name</Text>
                     <TextInput
                         style={styles.input}
@@ -76,6 +76,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         padding: 20,
+        marginTop: 50,
+
     },
     title: {
         color: '#007AFF',

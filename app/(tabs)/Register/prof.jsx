@@ -6,9 +6,14 @@ const Prof = () => {
     const [checked, setChecked] = useState('');
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <ScrollView 
+            style={styles.container} 
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+        >
             <Text style={styles.title}>Professional Registration</Text>
-            <Text style={styles.note}>Note: All help provided on this platform must be free of charge, failure to respect that will lead to closure of account
+            <Text style={styles.note}>
+                Note: All help provided on this platform must be free of charge, failure to respect that will lead to closure of account
             </Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                 <View style={{ flex: 1 }}>
@@ -17,7 +22,6 @@ const Prof = () => {
                         style={styles.input}
                         placeholder='Enter First Name'
                         placeholderTextColor="#999"
-
                     />
                 </View>
                 <View style={{ flex: 1 }}>
@@ -26,7 +30,6 @@ const Prof = () => {
                         style={styles.input}
                         placeholder='Enter Last Name'
                         placeholderTextColor="#999"
-
                     />
                 </View>
             </View>
@@ -36,23 +39,22 @@ const Prof = () => {
                 style={styles.input}
                 placeholder='Enter your username'
                 placeholderTextColor="#999"
-
             />
+            
             <Text style={styles.label}>Email</Text>
             <TextInput
                 style={styles.input}
                 placeholder='Enter email address'
                 placeholderTextColor="#999"
-
             />
-            <Text style={styles.label}>Speciality
-            </Text>
+            
+            <Text style={styles.label}>Speciality</Text>
             <TextInput
                 style={styles.input}
                 placeholder='provide your specific area of speciality'
                 placeholderTextColor="#999"
-
             />
+            
             <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
@@ -60,8 +62,8 @@ const Prof = () => {
                 placeholderTextColor="#999"
                 secureTextEntry
             />
-            <Text style={styles.label}>Are you willing to help people free of charge
-            </Text>
+            
+            <Text style={styles.label}>Are you willing to help people free of charge</Text>
             <RadioButton.Group
                 onValueChange={value => setChecked(value)}
                 value={checked}
@@ -75,32 +77,29 @@ const Prof = () => {
                         <RadioButton value='no' />
                         <Text>No</Text>
                     </View>
-
                 </View>
             </RadioButton.Group>
+            
             <Text style={styles.label}>Talk about your self</Text>
             <TextInput
-                style={styles.input}
+                style={styles.textArea}
                 multiline={true}
                 numberOfLines={5}
+                placeholder='Tell us about yourself...'
+                placeholderTextColor="#999"
+                textAlignVertical='top'
             />
-
 
             <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
             >
-                <Text
-                    style={styles.buttonText}
-                >Create Account</Text>
-
+                <Text style={styles.buttonText}>Create Account</Text>
             </TouchableOpacity>
-
-
         </ScrollView>
-
     )
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -108,7 +107,8 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         padding: 20,
-        paddingBottom: 40,
+        paddingBottom: 100, // Increased from 40 to 100
+        marginTop: 50,
     },
     title: {
         color: '#007AFF',
@@ -135,12 +135,23 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         backgroundColor: '#f9f9f9'
     },
+    textArea: {
+        minHeight: 100,
+        borderColor: 'gray',
+        borderWidth: 1,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 5,
+        marginBottom: 15,
+        backgroundColor: '#f9f9f9',
+        textAlignVertical: 'top',
+    },
     button: {
         backgroundColor: '#007AFF',
-        paddingVertical: 10,
+        paddingVertical: 15, 
         paddingHorizontal: 20,
         borderRadius: 10,
-        marginTop: 50,
+        marginTop: 20, 
     },
     buttonText: {
         color: 'white',
@@ -148,7 +159,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
-
-
 })
+
 export default Prof;

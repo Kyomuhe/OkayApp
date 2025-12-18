@@ -45,9 +45,7 @@ const BottomTabs = () => {
                     />
                 </Svg>
 
-                {/* Tab Buttons Container */}
                 <View style={styles.tabsContainer}>
-                    {/* Home Tab */}
                     <TouchableOpacity
                         onPress={() => setActiveTab('Home')}
                         style={styles.tabButton}
@@ -67,7 +65,6 @@ const BottomTabs = () => {
                         </Text>
                     </TouchableOpacity>
 
-                    {/* Center Add Button - Sits in the notch */}
                     <TouchableOpacity
                         style={styles.addButtonContainer}
                         onPress={() => setActiveTab('Add')}
@@ -77,7 +74,6 @@ const BottomTabs = () => {
                         </View>
                     </TouchableOpacity>
 
-                    {/* Profile Tab */}
                     <TouchableOpacity
                         style={styles.tabButton}
                         onPress={() => setActiveTab('Profile')}

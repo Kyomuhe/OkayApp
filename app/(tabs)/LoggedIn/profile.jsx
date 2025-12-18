@@ -1,8 +1,8 @@
 import { View, Text} from 'react-native'
 const Profile = () =>{
     return(
-        <View>
-            <Text>this is not yet implemented</Text>
+        <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+            <Text >This will be implemented soon</Text>
         </View>
     )
 }

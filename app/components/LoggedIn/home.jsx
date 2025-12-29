@@ -4,6 +4,7 @@ import { Search } from 'lucide-react-native';
 import PostCard from './postCard';
 import profile from '../../../assets/images/profile2.png';
 import image from '../../../assets/images/login.png';
+import logo from '../../../assets/images/okayLogo.png';
 
 // Constants
 const HEADER_HEIGHT = Platform.OS === 'ios' ? 110 : 100;
@@ -111,8 +112,12 @@ const ProfileButton = () => (
 
 const Logo = () => (
   <View style={styles.logoContainer}>
-    <Text style={styles.logoText}>Its Okay</Text>
-      <Text style={styles.okayText}>App</Text>
+    <Image 
+      source={logo} 
+      style={{ width: 180, height: 50, }} 
+    />
+    {/* <Text style={styles.logoText}>Its Okay</Text>
+      <Text style={styles.okayText}>App</Text> */}
   </View>
 );
 
@@ -133,7 +138,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1000,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#ECF2F8',
     paddingTop: Platform.OS === 'ios' ? 50 : 40,
     paddingBottom: 12,
     paddingHorizontal: 16,
@@ -172,15 +177,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     
-  },
-  logoText:{
-    fontSize: 24,
-    fontFamily:'sans-serif-medium',
-  },
-  okayText:{
-    fontSize: 24,
-    fontFamily:'sans-serif-medium',
-    color:'gray',
   },
   searchButton: {
     width: 40,

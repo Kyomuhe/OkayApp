@@ -4,7 +4,7 @@ import { Search } from 'lucide-react-native';
 import PostCard from './postCard';
 import profile from '../../../assets/images/profile2.png';
 import image from '../../../assets/images/login.png';
-import logo from '../../../assets/images/okayLogo.png';
+import logo from '../../../assets/images/logoo.png';
 
 // Constants
 const HEADER_HEIGHT = Platform.OS === 'ios' ? 110 : 100;
@@ -114,7 +114,7 @@ const Logo = () => (
   <View style={styles.logoContainer}>
     <Image 
       source={logo} 
-      style={{ width: 180, height: 50, }} 
+      style={{ width: 160, height: 50, }} 
     />
     {/* <Text style={styles.logoText}>Its Okay</Text>
       <Text style={styles.okayText}>App</Text> */}
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1000,
-    backgroundColor: '#ECF2F8',
+    backgroundColor: '#FFFFFF',
     paddingTop: Platform.OS === 'ios' ? 50 : 40,
     paddingBottom: 12,
     paddingHorizontal: 16,

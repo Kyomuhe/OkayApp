@@ -3,18 +3,23 @@ import { useState } from 'react'
 import signup from '../../../assets/images/signUp.png'
 import { RadioButton } from 'react-native-paper';
 import { router } from 'expo-router';
-
+import { useDispatch } from 'react-redux';
+import { setAccountType } from '../../../store/register';
 
 const SignUp = () => {
-    const [accountType, setAccountType] = useState('Normal');
+    const dispatch = useDispatch();
+
+    const [accountType, setAccount] = useState('Normal');
 
     const handleSubmit =() => {
-        if(accountType === 'Normal'){
-            router.push('/Register/normal')
+        if(accountType === 'NormalUser'){
+            dispatch(setAccountType('NormalUser'));
+            router.push('components/Register/normal')
             return;
         }
-        if(accountType === 'Professional'){
-            router.push('/Register/prof')
+        if(accountType === 'ProfessionalUser'){
+            dispatch(setAccountType('ProfessionalUser'));
+            router.push('components/Register/prof')
             return;
         }
     }
@@ -35,16 +40,16 @@ const SignUp = () => {
             />
 
             <RadioButton.Group 
-                onValueChange={value => setAccountType(value)} 
+                onValueChange={value => setAccount(value)} 
                 value={accountType}
             >
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                    <RadioButton value="Normal" />
+                    <RadioButton value="NormalUser" />
                     <Text>Normal Account</Text>
                 </View>
                 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <RadioButton value="Professional" />
+                    <RadioButton value="ProfessionalUser" />
                     <Text>Professional Account</Text>
                 </View>
             </RadioButton.Group>

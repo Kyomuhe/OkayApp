@@ -5,14 +5,15 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 
 const Normal = () => {
+    
     const [accountType, setAccountType] = useState('hide')
     const handleSubmit = () =>{
         if (accountType==='hide'){
-            router.push('/Register/hide')
+            router.push('components/Register/hide')
             return;
         }
         if (accountType === 'dontHide'){
-            router.push('/Register/dont')
+            router.push('components/Register/dont')
             return;
         }
     }

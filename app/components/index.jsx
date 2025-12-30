@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { showToast, makeRequest } from '../../utils/util'
-import logo from '../../assets/images/okayLogo.png';
+import logo from '../../assets/images/logo.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Index = () => {

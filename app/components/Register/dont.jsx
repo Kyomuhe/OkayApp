@@ -1,5 +1,91 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { useDispatch, useSelector } from 'react-redux';
+import { showToast, makeRequest } from '../../../utils/util'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
+import { resetRegistration } from '../../../store/register';
+
 const Dont = () => {
+    const dispatch = useDispatch();
+    const data = useSelector((state)=>state.register);
+
+    const validationSchema = Yup.object().shape({
+        firstName: Yup.string()
+            .min(2, 'First name must be at least 2 characters long')
+            .required('First name is required'),
+        lastName: Yup.string()
+            .min(2, 'Last name must be at least 2 characters long')
+            .required('Last name is required'),
+        username: Yup.string()
+            .min(3, 'Username must be at least 3 characters long')
+            .required('Username is required'),
+        problem: Yup.string()
+            .required('Problem description is required'),
+        details: Yup.string()
+            .required('Details are required'),
+        password: Yup.string()
+            .min(6, 'Password must be at least 6 characters long')
+            .required('Password is required'),
+        email: Yup.string()
+            .email('Invalid email address')
+            .required('Email is required'),
+    })
+
+    const formik = useFormik({
+        initialValues: {
+            firstName: '',
+            lastName: '',
+            username: '',
+            problem: '',
+            details: '',
+            password: '',
+            email: '',
+        },
+        validationSchema,
+        onSubmit: async (values, {setSubmitting}) => {
+            try{
+                const registrationData = {
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    username: values.username,
+                    problem: values.problem,
+                    details: values.details,
+                    password: values.password,
+                    email: values.email,
+                    accountType: data.accountType,
+                };
+                const response = await makeRequest("signup", "Auth", registrationData);
+
+                if(response?.returnCode !== 0){
+                    const errorMessage = response?.returnMessage || 'There is a registration issue';
+                    showToast(errorMessage, 'error');
+                    return;
+                }
+                const {token, user} = response?.returnObject || {};
+
+                if(!token || !user){
+                    showToast('Invalid response from server', 'error');
+                    return;
+                }
+                
+                await AsyncStorage.setItem('token', token);
+                await AsyncStorage.setItem('user', JSON.stringify(user));
+                formik.resetForm();
+                dispatch(resetRegistration());
+                showToast('Registration successful', 'success');
+                router.push('components/LoggedIn/bottomTab');
+        }catch (error) {
+            const errorMessage = error?.message || 'An error occurred during registration';
+            showToast(errorMessage, 'error');
+
+        }finally{
+            setSubmitting(false);   
+        }
+    }
+    })
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>You Are Almost There</Text>
@@ -10,55 +96,116 @@ const Dont = () => {
                     <Text style={styles.label}>First Name</Text>
                     <TextInput
                         style={styles.input}
+                        id='firstName'
+                        value={formik.values.firstName}
+                        onChangeText={formik.handleChange('firstName')}
+                        onBlur={formik.handleBlur('firstName')}
                         placeholder='Enter First Name'
                         placeholderTextColor="#999"
 
                     />
+                    {formik.touched.firstName && formik.errors.firstName && (
+                        <Text style={{ color: 'red', marginBottom: 10 }}>{formik.errors.firstName}</Text>
+                    )}
                 </View>
                 <View style={{ flex: 1 }}>
                     <Text style={styles.label}>Last Name</Text>
                     <TextInput
                         style={styles.input}
+                        id='lastName'
+                        value={formik.values.lastName}
+                        onChangeText={formik.handleChange('lastName')}
+                        onBlur={formik.handleBlur('lastName')}
                         placeholder='Enter Last Name'
                         placeholderTextColor="#999"
 
                     />
+                    {formik.touched.lastName && formik.errors.lastName && (
+                        <Text style={{ color: 'red', marginBottom: 10 }}>{formik.errors.lastName}</Text>
+                    )}
                 </View>
             </View>
 
             <Text style={styles.label}>User Name</Text>
             <TextInput
                 style={styles.input}
+                id='username'
+                value={formik.values.username}
+                onChangeText={formik.handleChange('username')}
+                onBlur={formik.handleBlur('username')}
                 placeholder='Enter your username'
                 placeholderTextColor="#999"
 
             />
+            {formik.touched.username && formik.errors.username && (
+                <Text style={{ color: 'red', marginBottom: 10 }}>{formik.errors.username}</Text>
+            )}
+
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+                style={styles.input}
+                id='email'
+                value={formik.values.email}
+                onChangeText={formik.handleChange('email')}
+                onBlur={formik.handleBlur('email')}
+                placeholder='Enter your email'
+                placeholderTextColor="#999"
+
+            />
+            {formik.touched.email && formik.errors.email && (
+                <Text style={{ color: 'red', marginBottom: 10 }}>{formik.errors.email}</Text>
+            )}
+
             <Text style={styles.label}>Problem you are suffering from</Text>
             <TextInput
                 style={styles.input}
+                id='problem'
+                value={formik.values.problem}
+                onChangeText={formik.handleChange('problem')}
+                onBlur={formik.handleBlur('problem')}
                 placeholder='describe what you are suffering from'
                 placeholderTextColor="#999"
 
             />
+            {formik.touched.problem && formik.errors.problem && (
+                <Text style={{ color: 'red', marginBottom: 10 }}>{formik.errors.problem}</Text>
+            )}
+
             <Text style={styles.label}>More details about the problem you are suffering from
             </Text>
             <TextInput
                 style={styles.input}
+                id='details'
+                value={formik.values.details}
+                onChangeText={formik.handleChange('details')}
+                onBlur={formik.handleBlur('details')}
                 placeholder='provide more details about your issue'
                 placeholderTextColor="#999"
 
             />
+            {formik.touched.details && formik.errors.details && (
+                <Text style={{ color: 'red', marginBottom: 10 }}>{formik.errors.details}</Text>
+            )}
+
             <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
+                id='password'
+                value={formik.values.password}
+                onChangeText={formik.handleChange('password')}
+                onBlur={formik.handleBlur('password')}
                 placeholder='**********'
                 placeholderTextColor="#999"
                 secureTextEntry
             />
+            {formik.touched.password && formik.errors.password && (
+                <Text style={{ color: 'red', marginBottom: 10 }}>{formik.errors.password}</Text>
+            )}
 
             <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
+                onPress={formik.handleSubmit}
             >
                 <Text
                     style={styles.buttonText}
@@ -92,7 +239,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 16,
-        marginBottom: 8,
+        marginBottom: 5,
         color: '#333',
     },
     input: {

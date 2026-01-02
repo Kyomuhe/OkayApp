@@ -1,6 +1,7 @@
 import Toast from "react-native-toast-message";
 import {ServerUrl} from '../config/config'
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const showToast = (message, type) => {
     switch (type) {
@@ -49,5 +50,41 @@ export const makeRequest = async (ACTION, SERVICE, data) => {
         } else {
             throw new Error(error.message);
         }
+    }
+}
+
+export const getAcessToken = async () =>{
+    return await AsyncStorage.getItem('accessToken');
+}
+
+export const makeAuthenticatedRequest = async (ACTION, SERVICE, data) => {
+    let accessToken = await getAcessToken();
+    try{
+        let url = ServerUrl
+
+        const payload = {ACTION, SERVICE, ...data};
+
+        let config ={
+            headers:{
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+
+            }
+        };
+        const response = await axios.post(url, payload, config);
+        console.log("request was successful");
+        return response.data;
+    }catch(error){
+        console.error("Error making authenticated request:", error);
+
+        if(error.response){
+            const errorMessage = error.response.data || error;
+            showToast(`Error: ${errorMessage}`, 'error');
+            throw errorMessage;
+        }else{
+            showToast(`Error: ${error.message}`, 'error');
+            throw new Error(error.message)
+        }
+
     }
 }

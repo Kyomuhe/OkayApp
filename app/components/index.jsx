@@ -128,7 +128,7 @@ const Index = () => {
             </Text>
             <TouchableOpacity
                 style={styles.signupLinkArea}
-                onPress={() => router.push('components/Register/signup')}
+                onPress={() => router.push('/components/LoggedIn/bottomTab')}
 
             >
                 <Text style={styles.signupLinkText}>

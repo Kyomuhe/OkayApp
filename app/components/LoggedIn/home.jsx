@@ -1,10 +1,12 @@
-import { View, StyleSheet, Text, Animated, Platform, TouchableOpacity, Image } from 'react-native';
-import { useRef } from 'react';
+import { View, StyleSheet, Animated, Platform, TouchableOpacity, Image } from 'react-native';
+import { useRef, useState ,useEffect} from 'react';
 import { Search } from 'lucide-react-native';
 import PostCard from './postCard';
 import profile from '../../../assets/images/profile2.png';
 import image from '../../../assets/images/login.png';
 import logo from '../../../assets/images/logoo.png';
+import {makeAuthenticatedRequest, showToast} from '../../../utils/util'
+
 
 // Constants
 const HEADER_HEIGHT = Platform.OS === 'ios' ? 110 : 100;
@@ -46,6 +48,12 @@ const MOCK_POSTS = [
 ];
 
 const HomePage = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() =>{
+    displayPosts();
+  },[]);
+
   const lastScrollY = useRef(0);
   const headerTranslateY = useRef(new Animated.Value(0)).current;
 
@@ -70,6 +78,22 @@ const HomePage = () => {
     
     lastScrollY.current = currentScrollY;
   };
+  const displayPosts = async()=>{
+    try{
+    const response = await makeAuthenticatedRequest("displayAllPosts", "Posts",{});
+    if(response?.returnCode !==0){
+      showToast(response.returnMessage, 'error')
+      return;
+    }
+    const newPosts = response?.returnObject || [];
+    console.log("these are the posts:", newPosts); 
+    setPosts(newPosts);
+
+    }catch(error){
+      showToast(error.message, 'error');
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -81,7 +105,7 @@ const HomePage = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {MOCK_POSTS.map(post => (
+        {posts.map(post => (
           <PostCard key={post.id} post={post} />
         ))}
       </Animated.ScrollView>
@@ -187,6 +211,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: HEADER_HEIGHT,
     paddingBottom: 32,
+    marginTop:18,
     paddingHorizontal: 16,
     width: '100%',
   },

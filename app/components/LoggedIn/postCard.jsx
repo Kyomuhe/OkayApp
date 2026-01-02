@@ -3,6 +3,29 @@ import { Heart, MessageCircle, Bookmark } from "lucide-react-native";
 import profile from '../../../assets/images/profile2.png';
 
 const PostCard = ({ post }) => {
+  const getTimeAgo = (timestamp) => {
+    if (!timestamp) return '';
+
+    const now = new Date();
+    const postDate = new Date(timestamp);
+    const diffInMs = now - postDate;
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+
+    return postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  // Logging the coverImage value
+  console.log("Post coverImage:", post?.coverImage);
+  console.log("CoverImage type:", typeof post?.coverImage);
+  console.log("CoverImage length:", post?.coverImage?.length);
+
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
@@ -12,16 +35,19 @@ const PostCard = ({ post }) => {
         />
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{post?.username || "Kyomuhendo Precious"}</Text>
-          <Text style={styles.timeStamp}>{post?.timestamp || "2hrs ago"}</Text>
+          <Text style={styles.timeStamp}>{getTimeAgo(post?.createdAt)}</Text>
         </View>
       </View>
+      <Text style={{ marginBottom: 8, fontWeight: 'bold', fontSize: 16 }}>{post?.title || "Post Title"}</Text>
 
-        <Text style={styles.postBody}>{post?.body || "This post is for testing"}</Text>
+      <Text style={styles.postBody}>{post?.body || "This post is for testing"}</Text>
 
-      {post?.image && (
+      {post?.coverImage && (
         <Image
-          source={ post.image }
+          source={{ uri: `data:image/jpeg;base64,${post.coverImage}` }}
           style={styles.postImage}
+          onError={(error) => console.log("Image load error:", error.nativeEvent)}
+          onLoad={() => console.log("Image loaded successfully!")}
         />
       )}
 
@@ -50,7 +76,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#D1D1D1',  
+    borderColor: '#D1D1D1',
   },
   profile: {
     flexDirection: 'row',
@@ -88,6 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 12,
     resizeMode: 'cover',
+    backgroundColor: '#E5E7EB', // Add a background color to see if space is reserved
   },
   actionsContainer: {
     flexDirection: 'row',

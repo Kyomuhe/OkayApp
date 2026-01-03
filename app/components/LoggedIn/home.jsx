@@ -14,38 +14,6 @@ const SCROLL_THRESHOLD = 10;
 const ANIMATION_DURATION = 200;
 const HEADER_HIDE_VALUE = -100;
 
-const MOCK_POSTS = [
-  {
-    id: 1,
-    username: "Mike Chen",
-    profileImage: profile,
-    timestamp: "5 hours ago",
-    body: "Excited to announce that I've just launched my new web development portfolio! It's been months of hard work, but I'm so proud of how it turned out. Check it out and let me know what you think! 🚀",
-    image: image,
-    likes: 89,
-    comments: 12
-  },
-  {
-    id: 2,
-    username: "Sarah Johnson",
-    profileImage: profile,
-    timestamp: "2 hours ago",
-    body: "Just finished an amazing hike in the mountains! The view from the top was absolutely breathtaking. Nature really has a way of putting things in perspective. 🏔️",
-    image: null,
-    likes: 124,
-    comments: 18
-  },
-  {
-    id: 3,
-    username: "Mike Chen",
-    profileImage: profile,
-    timestamp: "5 hours ago",
-    body: "Excited to announce that I've just launched my new web development portfolio! It's been months of hard work, but I'm so proud of how it turned out. Check it out and let me know what you think! 🚀",
-    image: image,
-    likes: 89,
-    comments: 12
-  }
-];
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
@@ -86,7 +54,7 @@ const HomePage = () => {
       return;
     }
     const newPosts = response?.returnObject || [];
-    console.log("these are the posts:", newPosts); 
+    // console.log("these are the posts:", newPosts); 
     setPosts(newPosts);
 
     }catch(error){

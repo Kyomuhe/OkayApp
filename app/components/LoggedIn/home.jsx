@@ -53,7 +53,7 @@ const HomePage = () => {
       showToast(response.returnMessage, 'error')
       return;
     }
-    const newPosts = response?.returnObject || [];
+    const newPosts = (response?.returnObject || []).reverse();
     // console.log("these are the posts:", newPosts); 
     setPosts(newPosts);
 

@@ -1,12 +1,10 @@
-import { View,Text,StyleSheet,Image,TextInput,TouchableOpacity,ScrollView,Alert,} from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import profile from '../../../assets/images/profile2.png';
 import { Image as ImageIcon, X } from 'lucide-react-native';
 import { makeAuthenticatedRequest, showToast } from '../../../utils/util';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
-// import * as FileSystem from 'expo-file-system';
-import * as FileSystem from 'expo-file-system/legacy';
 
 const CreatePost = () => {
     const [postTitle, setTitle] = useState('');
@@ -16,11 +14,11 @@ const CreatePost = () => {
 
     const pickImage = async () => {
         try {
-            const { status } =
-                await ImagePicker.requestMediaLibraryPermissionsAsync();
+            // Requestng media library permission
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
             if (status !== 'granted') {
-                Alert.alert('Permission Denied');
+                Alert.alert('Permission Denied', 'We need access to your photos to select an image.');
                 return;
             }
 
@@ -28,25 +26,33 @@ const CreatePost = () => {
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality: 0.8,
+                quality: 0.8,        // Adjusting if images are too large
+                base64: true,       
             });
 
-            if (!result.canceled && result.assets?.length > 0) {
+            if (result.canceled) {
+                console.log('Image selection cancelled');
+                return;
+            }
+
+            if (result.assets && result.assets.length > 0) {
                 const asset = result.assets[0];
 
                 setImageUri(asset.uri);
 
-                const base64 = await FileSystem.readAsStringAsync(asset.uri, {
-                    encoding: 'base64',
-                });
-
-                setImageBase64(base64);
-
-                console.log(' Base64 length:', base64.length);
+                if (asset.base64) {
+                    setImageBase64(asset.base64);
+                    console.log('Image encoded to base64 successfully');
+                    console.log('Base64 length:', asset.base64.length);
+                } else {
+                    console.error('Base64 data missing from picker result');
+                    showToast('Failed to process image', 'error');
+                    setImageUri('');
+                }
             }
         } catch (error) {
             console.error('Error picking image:', error);
-            showToast('Image encoding failed', 'error');
+            showToast('Failed to select image', 'error');
         }
     };
 
@@ -62,24 +68,25 @@ const CreatePost = () => {
                 return;
             }
 
-            console.log('Creating post...');
-            console.log('Has image:', !!imageBase64);
-            console.log('Base64 length:', imageBase64.length);
+            console.log('Preparing to send post...');
+            console.log('Image included:', !!imageBase64);
+            console.log('Base64 length:', imageBase64.length || 0);
 
             const data = {
-                title: postTitle,
-                body: postBody,
-                image: imageBase64 || null, 
+                title: postTitle.trim(),
+                body: postBody.trim(),
+                coverImage: imageBase64 || null, 
             };
+            console.log('this is the data being sent:', data);
 
-            const response = await makeAuthenticatedRequest('create','Posts',data);
+            const response = await makeAuthenticatedRequest('create', 'Posts', data);
 
             if (response?.returnCode !== 0) {
-                showToast(response?.returnMessage, 'error');
+                showToast(response?.returnMessage || 'Failed to create post', 'error');
                 return;
             }
 
-            showToast('Published post', 'success');
+            showToast('Published post successfully!', 'success');
 
             setTitle('');
             setBody('');
@@ -89,81 +96,63 @@ const CreatePost = () => {
             router.push('components/LoggedIn/bottomTab');
         } catch (error) {
             console.error('Error creating post:', error);
-            showToast(error.message, 'error');
+            showToast('Network error. Please try again.', 'error');
         }
     };
 
     return (
-        <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.contentContainer}
-        >
-            <Text
-                style={{
-                    fontSize: 24,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    marginBottom: 10,
-                }}
-            >
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>
                 Create Post
             </Text>
-
-            <Text
-                style={{
-                    fontSize: 14,
-                    textAlign: 'center',
-                    color: 'gray',
-                }}
-            >
+            <Text style={{ fontSize: 14, textAlign: 'center', color: 'gray' }}>
                 Share your thoughts with the community
             </Text>
 
             <View style={styles.postContainer}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image
-                        source={profile}
-                        style={{ width: 40, height: 40, borderRadius: 20 }}
-                    />
-                    <Text style={{ marginLeft: 10, color: 'gray' }}>
-                        @userName
-                    </Text>
+                    <Image source={profile} style={{ width: 40, height: 40, borderRadius: 20 }} />
+                    <Text style={{ marginLeft: 10, color: 'gray' }}>@userName</Text>
                 </View>
 
                 <TextInput
-                    style={styles.input}
+                    style={styles.titleInput}
                     placeholder="Title"
                     value={postTitle}
                     onChangeText={setTitle}
                 />
 
                 <TextInput
-                    style={[styles.input, styles.bodyInput]}
+                    style={styles.bodyInput}
                     placeholder="What's on your mind?"
                     multiline
                     value={postBody}
                     onChangeText={setBody}
                 />
 
+                {/* Image Preview */}
                 {imageUri && (
                     <View style={styles.imagePreviewContainer}>
                         <Image
                             source={{ uri: imageUri }}
                             style={styles.imagePreview}
+                            resizeMode="cover"
                         />
                         <TouchableOpacity
                             style={styles.removeImageButton}
                             onPress={removeImage}
+                            activeOpacity={0.7}
                         >
                             <X size={20} color="#FFFFFF" />
                         </TouchableOpacity>
                     </View>
                 )}
 
-                <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                <View style={{ flexDirection: 'row', marginTop: 40, alignItems: 'center' }}>
                     <TouchableOpacity
                         style={styles.imageButton}
                         onPress={pickImage}
+                        activeOpacity={0.7}
                     >
                         <ImageIcon size={20} color="#4B5563" />
                         <Text style={styles.buttonText}>Add Image</Text>
@@ -172,11 +161,20 @@ const CreatePost = () => {
                     <TouchableOpacity
                         onPress={createPost}
                         style={styles.publishButton}
+                        activeOpacity={0.8}
                     >
-                        <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>
-                            Publish
-                        </Text>
+                        <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>Publish</Text>
                     </TouchableOpacity>
+                </View>
+            </View>
+
+            <View style={styles.guidelinesContainer}>
+                <Text style={{ fontWeight: 'bold', color: '#1E40AF' }}>Community Guidelines</Text>
+                <View style={{ marginTop: 8 }}>
+                    <Text style={styles.guidelineText}>• Be respectful and considerate</Text>
+                    <Text style={styles.guidelineText}>• No spam or self-promotion</Text>
+                    <Text style={styles.guidelineText}>• Keep discussions appropriate</Text>
+                    <Text style={styles.guidelineText}>• Report any violations to moderators</Text>
                 </View>
             </View>
         </ScrollView>
@@ -200,7 +198,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         padding: 15,
     },
-    input: {
+    titleInput: {
         height: 40,
         borderColor: '#E5E7EB',
         borderWidth: 1,
@@ -210,6 +208,11 @@ const styles = StyleSheet.create({
     },
     bodyInput: {
         height: 190,
+        borderColor: '#E5E7EB',
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        marginTop: 15,
         textAlignVertical: 'top',
     },
     imageButton: {
@@ -223,6 +226,10 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#FFFFFF',
     },
+    buttonText: {
+        fontSize: 14,
+        color: '#374151',
+    },
     publishButton: {
         marginLeft: 'auto',
         backgroundColor: '#3B82F6',
@@ -230,15 +237,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         borderRadius: 8,
     },
-    buttonText: {
-        fontSize: 14,
-        color: '#374151',
-    },
     imagePreviewContainer: {
         marginTop: 15,
+        position: 'relative',
         borderRadius: 10,
         overflow: 'hidden',
-        position: 'relative',
     },
     imagePreview: {
         width: '100%',
@@ -248,12 +251,26 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
-        backgroundColor: 'rgba(0,0,0,0.6)',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
         borderRadius: 15,
         width: 30,
         height: 30,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    guidelinesContainer: {
+        marginTop: 30,
+        marginBottom: 20,
+        padding: 15,
+        borderWidth: 1,
+        borderColor: '#dbeafe',
+        borderRadius: 10,
+        backgroundColor: '#eff6ff',
+    },
+    guidelineText: {
+        fontSize: 12,
+        color: 'gray',
+        marginBottom: 5,
     },
 });
 

@@ -21,10 +21,10 @@ const PostCard = ({ post }) => {
     return postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
-  // Logging the coverImage value
-  console.log("Post coverImage:", post?.coverImage);
-  console.log("CoverImage type:", typeof post?.coverImage);
-  console.log("CoverImage length:", post?.coverImage?.length);
+  // // Logging the coverImage value
+  // console.log("Post coverImage:", post?.coverImage);
+  // console.log("CoverImage type:", typeof post?.coverImage);
+  // console.log("CoverImage length:", post?.coverImage?.length);
 
   return (
     <View style={styles.container}>
@@ -46,8 +46,8 @@ const PostCard = ({ post }) => {
         <Image
           source={{ uri: `data:image/jpeg;base64,${post.coverImage}` }}
           style={styles.postImage}
-          onError={(error) => console.log("Image load error:", error.nativeEvent)}
-          onLoad={() => console.log("Image loaded successfully!")}
+          // onError={(error) => console.log("Image load error:", error.nativeEvent)}
+          // onLoad={() => console.log("Image loaded successfully!")}
         />
       )}
 

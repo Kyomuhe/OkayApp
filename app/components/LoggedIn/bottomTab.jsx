@@ -4,7 +4,7 @@ import { Home, Plus, User } from "lucide-react-native";
 import Svg, { Path } from "react-native-svg";
 import HomePage from "./home";
 import CreatePost from "./createPost";
-import Profile from "./profile";
+import Profile from "../LoggedIn/Profile/profile";
 
 const BottomTabs = () => {
     const [activeTab, setActiveTab] = useState('Home');

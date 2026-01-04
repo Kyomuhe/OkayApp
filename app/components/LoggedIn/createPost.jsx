@@ -22,28 +22,30 @@ const CreatePost = () => {
                 return;
             }
 
+            //opening the device's image library
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,//restricting to images only
+                allowsEditing: true,//allowing user to edit the selected image
                 aspect: [4, 3],
                 quality: 0.8,        // Adjusting if images are too large
-                base64: true,       
+                base64: true,  //converting image to base64     
             });
 
+            //checking if user cancelled without selecting an image
             if (result.canceled) {
                 console.log('Image selection cancelled');
                 return;
             }
 
             if (result.assets && result.assets.length > 0) {
-                const asset = result.assets[0];
+                const asset = result.assets[0];//getting the first selected image
 
                 setImageUri(asset.uri);
 
                 if (asset.base64) {
                     setImageBase64(asset.base64);
-                    console.log('Image encoded to base64 successfully');
-                    console.log('Base64 length:', asset.base64.length);
+                    // console.log('Image encoded to base64 successfully');
+                    // console.log('Base64 length:', asset.base64.length);
                 } else {
                     console.error('Base64 data missing from picker result');
                     showToast('Failed to process image', 'error');
@@ -68,16 +70,16 @@ const CreatePost = () => {
                 return;
             }
 
-            console.log('Preparing to send post...');
-            console.log('Image included:', !!imageBase64);
-            console.log('Base64 length:', imageBase64.length || 0);
+            // console.log('Preparing to send post...');
+            // console.log('Image included:', !!imageBase64);
+            // console.log('Base64 length:', imageBase64.length || 0);
 
             const data = {
                 title: postTitle.trim(),
                 body: postBody.trim(),
                 coverImage: imageBase64 || null, 
             };
-            console.log('this is the data being sent:', data);
+            // console.log('this is the data being sent:', data);
 
             const response = await makeAuthenticatedRequest('create', 'Posts', data);
 
@@ -96,7 +98,7 @@ const CreatePost = () => {
             router.push('components/LoggedIn/bottomTab');
         } catch (error) {
             console.error('Error creating post:', error);
-            showToast('Network error. Please try again.', 'error');
+            showToast(error.message, 'error');
         }
     };
 

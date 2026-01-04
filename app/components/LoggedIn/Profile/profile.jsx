@@ -1,6 +1,10 @@
 import { ScrollView, Text, StyleSheet, Image, View, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import profile from '../../../../assets/images/profile2.png';
+import MyStories from './myStories';
+import Groups from './groups';
+import Conversations from './conversations';
+import { UserPen } from 'lucide-react-native';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('MyStories');
@@ -10,21 +14,29 @@ const Profile = () => {
   };
 
   const renderTabContent = () => {
-    return (
-      <View style={styles.placeholderContainer}>
-        <Text style={styles.placeholderText}>
-          {activeTab} will be implemented later
-        </Text>
-      </View>
-    );
+    switch (activeTab) {
+      case 'MyStories':
+        return <MyStories/>
+      case 'OngoingConversations':
+        return <Conversations/>
+      case 'MyGroups':
+        return <Groups/>
+
+    }
+    // <View style={styles.placeholderContainer}>
+    //   <Text style={styles.placeholderText}>
+    //     {activeTab} will be implemented later
+    //   </Text>
+    // </View>
+
   };
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-            <Text style={styles.editIcon}>✏️</Text>
+          <TouchableOpacity onPress={handleEdit}>
+            <Text style={styles.editIcon}><UserPen/></Text>
           </TouchableOpacity>
         </View>
 
@@ -94,19 +106,6 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingRight: 20,
     paddingBottom: 10,
-  },
-  editButton: {
-    backgroundColor: '#007AFF',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   editIcon: {
     fontSize: 18,

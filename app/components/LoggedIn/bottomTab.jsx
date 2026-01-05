@@ -101,7 +101,7 @@ const BottomTabs = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#FFFFFF',
         marginBottom:15,
     },
     content: {
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     bottomNavContainer: {
         position: 'relative',
         height: 90,
-        backgroundColor: 'transparent',
+        backgroundColor: '#FFFFFF',
     },
     svgCurve: {
         position: 'absolute',

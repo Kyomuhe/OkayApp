@@ -47,6 +47,7 @@ const Index = () => {
 
                 await AsyncStorage.setItem('accessToken', token);
                 await AsyncStorage.setItem('user', JSON.stringify(user));
+                console.log('User data stored:', user);
 
                 formik.resetForm();
                 showToast('Login successful', 'success');

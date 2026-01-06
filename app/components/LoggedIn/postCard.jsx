@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Heart, MessageCircle, Bookmark } from "lucide-react-native";
+import { Heart, MessageCircle, Bookmark, MoreVertical } from "lucide-react-native";
 import profile from '../../../assets/images/profile2.png';
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, showMoreIcon = false, onMorePress }) => {
   const getTimeAgo = (timestamp) => {
     if (!timestamp) return '';
 
@@ -21,11 +21,6 @@ const PostCard = ({ post }) => {
     return postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
-  // // Logging the coverImage value
-  // console.log("Post coverImage:", post?.coverImage);
-  // console.log("CoverImage type:", typeof post?.coverImage);
-  // console.log("CoverImage length:", post?.coverImage?.length);
-
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
@@ -37,7 +32,17 @@ const PostCard = ({ post }) => {
           <Text style={styles.userName}>{post?.username || "Kyomuhendo Precious"}</Text>
           <Text style={styles.timeStamp}>{getTimeAgo(post?.createdAt)}</Text>
         </View>
+        
+        {showMoreIcon && (
+          <TouchableOpacity 
+            style={styles.moreButton} 
+            onPress={onMorePress}
+          >
+            <MoreVertical size={20} color="#6B7280" />
+          </TouchableOpacity>
+        )}
       </View>
+      
       <Text style={{ marginBottom: 8, fontWeight: 'bold', fontSize: 16 }}>{post?.title || "Post Title"}</Text>
 
       <Text style={styles.postBody}>{post?.body || "This post is for testing"}</Text>
@@ -46,8 +51,6 @@ const PostCard = ({ post }) => {
         <Image
           source={{ uri: `data:image/jpeg;base64,${post.coverImage}` }}
           style={styles.postImage}
-          // onError={(error) => console.log("Image load error:", error.nativeEvent)}
-          // onLoad={() => console.log("Image loaded successfully!")}
         />
       )}
 
@@ -102,6 +105,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6B7280',
   },
+  moreButton: {
+    padding: 4,
+  },
   postBody: {
     fontSize: 14,
     color: '#1F2937',
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 12,
     resizeMode: 'cover',
-    backgroundColor: '#E5E7EB', // Add a background color to see if space is reserved
+    backgroundColor: '#E5E7EB',
   },
   actionsContainer: {
     flexDirection: 'row',

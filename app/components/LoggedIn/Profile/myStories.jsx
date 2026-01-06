@@ -60,19 +60,13 @@ const MyStories = () => {
                     style: 'destructive',
                     onPress: async () => {
                         try {
-                            // TODO: Call your delete API endpoint
-                            const response = await makeAuthenticatedRequest(
-                                "deletePost", 
-                                "Posts", 
-                                { postId: selectedPost.id }
-                            );
+                            const response = await makeAuthenticatedRequest("delete", "Posts", { postId: selectedPost.id });
                             
                             if (response?.returnCode !== 0) {
                                 showToast(response.returnMessage, 'error');
                                 return;
                             }
 
-                            // Remove the post from local state
                             setStories(stories.filter(story => story.id !== selectedPost.id));
                             showToast('Story deleted successfully', 'success');
                         } catch (error) {
